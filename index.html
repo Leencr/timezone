@@ -2,9 +2,11 @@
 <html lang="es">
 <head>
   <link rel="manifest" href="manifest.json">
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Conversor de Hora a Costa Rica</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel&family=Macondo&display=swap');
+
     body {
       font-family: 'Macondo', cursive;
       padding: 2rem;
@@ -38,7 +40,8 @@
       z-index: 10;
     }
 
-    select, input {
+    select,
+    input {
       width: 100%;
       margin-top: 0.5rem;
       padding: 10px;
@@ -53,7 +56,8 @@
       z-index: 10;
     }
 
-    select:focus, input:focus {
+    select:focus,
+    input:focus {
       outline: none;
       box-shadow: 0 0 15px rgba(250, 204, 21, 0.8);
       transform: scale(1.02);
@@ -96,17 +100,31 @@
       z-index: 10;
     }
 
-    .america { color: #ff4500; }
-    .europe { color: #28A745; }
-    .asia { color: #DC3545; }
-    .oceania { color: #FFC107; }
-    .africa { color: #6C757D; }
+    .america {
+      color: #ff4500;
+    }
+
+    .europe {
+      color: #28a745;
+    }
+
+    .asia {
+      color: #dc3545;
+    }
+
+    .oceania {
+      color: #ffc107;
+    }
+
+    .africa {
+      color: #6c757d;
+    }
 
     /* Botón mágico de volver */
     .magic-back {
       position: fixed;
       bottom: 20px;
-      right: 20px; /* Lo movemos a la derecha para no tapar contenido */
+      right: 20px;
       background: linear-gradient(45deg, #b91c1c, #facc15);
       color: white;
       padding: 12px 20px;
@@ -136,18 +154,40 @@
 
     .signature .main {
       font-size: 0.9rem;
-      color: rgba(255, 255, 255, 0.7);
-      transition: color 0.3s;
-    }
-
-    .signature .main:hover {
-      color: #fff;
+      color: #facc15;
+      background: linear-gradient(90deg, #b91c1c, #facc15, #b91c1c);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: magicalGlow 3s ease-in-out infinite;
+      cursor: default;
+      user-select: none;
     }
 
     .signature .sub {
       font-size: 0.7rem;
-      color: rgba(255, 255, 255, 0.5);
+      color: rgba(250, 204, 21, 0.7);
       margin-top: 4px;
+    }
+
+    @keyframes magicalGlow {
+      0%,
+      100% {
+        text-shadow:
+          0 0 5px #facc15,
+          0 0 10px #b91c1c,
+          0 0 20px #facc15,
+          0 0 30px #b91c1c;
+        opacity: 0.9;
+      }
+      50% {
+        text-shadow:
+          0 0 10px #facc15,
+          0 0 20px #b91c1c,
+          0 0 30px #facc15,
+          0 0 40px #b91c1c;
+        opacity: 1;
+      }
     }
 
     /* Estrellas mágicas */
@@ -170,13 +210,24 @@
     }
 
     @keyframes twinkle {
-      0%, 100% { opacity: 0.2; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.3); }
+      0%,
+      100% {
+        opacity: 0.2;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.3);
+      }
     }
 
     @keyframes moveStar {
-      from { transform: translateY(0) }
-      to { transform: translateY(100vh) }
+      from {
+        transform: translateY(0);
+      }
+      to {
+        transform: translateY(100vh);
+      }
     }
   </style>
   <script src="https://unpkg.com/libphonenumber-js@1.10.6/bundle/libphonenumber-js.min.js"></script>
@@ -220,16 +271,16 @@
   </select>
 
   <label for="hour">Hora (24h):</label>
-  <input type="number" id="hour" min="0" max="23" placeholder="Ej: 8">
+  <input type="number" id="hour" min="0" max="23" placeholder="Ej: 8" />
 
   <label for="minute">Minuto:</label>
-  <input type="number" id="minute" min="0" max="59" placeholder="Ej: 30">
+  <input type="number" id="minute" min="0" max="59" placeholder="Ej: 30" />
 
   <label for="date">Fecha (opcional):</label>
-  <input type="date" id="date">
+  <input type="date" id="date" />
 
   <label>
-    <input type="checkbox" id="dst">
+    <input type="checkbox" id="dst" />
     ¿Aplica horario de verano (DST)?
   </label>
 
@@ -239,7 +290,7 @@
   <div class="countries" id="countries"></div>
 
   <h2>Identificar País por Número Telefónico</h2>
-  <input type="tel" id="phoneNumber" placeholder="Ingrese número telefónico">
+  <input type="tel" id="phoneNumber" placeholder="Ingrese número telefónico" />
   <button onclick="identifyCountry()">Identificar País</button>
   <div id="phoneResult"></div>
 
@@ -290,7 +341,7 @@
         '14': { countries: ['Islas de la Línea (Kiribati)'], continent: 'oceania' }
       };
 
-      const offset = (tz + dst) - (-6);
+      const offset = (tz + dst) - -6;
       let date = document.getElementById('date').value ? new Date(document.getElementById('date').value) : new Date();
       date.setHours(hour);
       date.setMinutes(minute);
@@ -314,25 +365,67 @@
     function identifyCountry() {
       const phoneNumber = document.getElementById('phoneNumber').value;
       const countryToContinent = {
-        'US': 'america', 'CA': 'america', 'MX': 'america', 'CR': 'america',
-        'PA': 'america', 'BR': 'america', 'AR': 'america', 'CO': 'america',
-        'ES': 'europe', 'FR': 'europe', 'GB': 'europe', 'DE': 'europe',
-        'IT': 'europe', 'PT': 'europe', 'NL': 'europe',
-        'CN': 'asia', 'JP': 'asia', 'KR': 'asia', 'IN': 'asia',
-        'TH': 'asia', 'VN': 'asia', 'MY': 'asia',
-        'AU': 'oceania', 'NZ': 'oceania', 'FJ': 'oceania',
-        'ZA': 'africa', 'EG': 'africa', 'MA': 'africa', 'NG': 'africa'
+        US: 'america',
+        CA: 'america',
+        MX: 'america',
+        CR: 'america',
+        PA: 'america',
+        BR: 'america',
+        AR: 'america',
+        CO: 'america',
+        ES: 'europe',
+        FR: 'europe',
+        GB: 'europe',
+        DE: 'europe',
+        IT: 'europe',
+        PT: 'europe',
+        NL: 'europe',
+        CN: 'asia',
+        JP: 'asia',
+        KR: 'asia',
+        IN: 'asia',
+        TH: 'asia',
+        VN: 'asia',
+        MY: 'asia',
+        AU: 'oceania',
+        NZ: 'oceania',
+        FJ: 'oceania',
+        ZA: 'africa',
+        EG: 'africa',
+        MA: 'africa',
+        NG: 'africa'
       };
 
       const countryNames = {
-        'US': 'Estados Unidos', 'CA': 'Canadá', 'MX': 'México', 'CR': 'Costa Rica',
-        'PA': 'Panamá', 'BR': 'Brasil', 'AR': 'Argentina', 'CO': 'Colombia',
-        'ES': 'España', 'FR': 'Francia', 'GB': 'Reino Unido', 'DE': 'Alemania',
-        'IT': 'Italia', 'PT': 'Portugal', 'NL': 'Países Bajos',
-        'CN': 'China', 'JP': 'Japón', 'KR': 'Corea del Sur', 'IN': 'India',
-        'TH': 'Tailandia', 'VN': 'Vietnam', 'MY': 'Malasia',
-        'AU': 'Australia', 'NZ': 'Nueva Zelanda', 'FJ': 'Fiyi',
-        'ZA': 'Sudáfrica', 'EG': 'Egipto', 'MA': 'Marruecos', 'NG': 'Nigeria'
+        US: 'Estados Unidos',
+        CA: 'Canadá',
+        MX: 'México',
+        CR: 'Costa Rica',
+        PA: 'Panamá',
+        BR: 'Brasil',
+        AR: 'Argentina',
+        CO: 'Colombia',
+        ES: 'España',
+        FR: 'Francia',
+        GB: 'Reino Unido',
+        DE: 'Alemania',
+        IT: 'Italia',
+        PT: 'Portugal',
+        NL: 'Países Bajos',
+        CN: 'China',
+        JP: 'Japón',
+        KR: 'Corea del Sur',
+        IN: 'India',
+        TH: 'Tailandia',
+        VN: 'Vietnam',
+        MY: 'Malasia',
+        AU: 'Australia',
+        NZ: 'Nueva Zelanda',
+        FJ: 'Fiyi',
+        ZA: 'Sudáfrica',
+        EG: 'Egipto',
+        MA: 'Marruecos',
+        NG: 'Nigeria'
       };
 
       try {
