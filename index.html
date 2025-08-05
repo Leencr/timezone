@@ -1,56 +1,147 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <link rel="manifest" href="manifest.json">
   <meta charset="UTF-8">
   <title>Conversor de Hora a Costa Rica</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Macondo', cursive;
       padding: 2rem;
-      background: linear-gradient(to bottom right, #7f1d1d, #b91c1c);
-      color: white;
-      padding-bottom: 120px;
+      background: url('https://www.transparenttextures.com/patterns/old-wallpaper.png'),
+        linear-gradient(to bottom right, #7f1d1d, #fbbf24);
+      background-size: auto;
+      color: #f8f8f8;
+      min-height: 100vh;
       overflow-x: hidden;
+      position: relative;
+      padding-bottom: 120px; /* espacio para firma y botón */
     }
 
-    label, select, input { display: block; margin-top: 1rem; }
-    button { margin-top: 2rem; padding: 0.5rem 1rem; font-size: 1rem; cursor: pointer; }
+    h1 {
+      font-family: 'Cinzel', serif;
+      text-align: center;
+      color: #facc15;
+      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 10;
+    }
 
-    .result { margin-top: 1rem; font-size: 1.2rem; }
-    .countries { margin-top: 1rem; font-size: 1rem; line-height: 1.5; }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-size: 1.1rem;
+      color: #fff8dc;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+      position: relative;
+      z-index: 10;
+    }
 
-    /* Botón mágico de regreso */
-    .back-button {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #b91c1c;
-      color: white;
-      border: none;
+    select, input {
+      width: 100%;
+      margin-top: 0.5rem;
+      padding: 10px;
+      font-size: 1rem;
+      border: 2px solid #facc15;
       border-radius: 8px;
-      padding: 10px 20px;
-      font-size: 0.9rem;
+      background: rgba(255, 255, 255, 0.9);
+      color: #7f1d1d;
+      box-shadow: 0 0 10px rgba(250, 204, 21, 0.4);
+      transition: box-shadow 0.3s, transform 0.2s;
+      position: relative;
+      z-index: 10;
+    }
+
+    select:focus, input:focus {
+      outline: none;
+      box-shadow: 0 0 15px rgba(250, 204, 21, 0.8);
+      transform: scale(1.02);
+    }
+
+    button {
+      margin-top: 1.5rem;
+      padding: 12px 20px;
+      font-size: 1.1rem;
+      background-color: #b91c1c;
+      color: #fff;
+      border: 2px solid #facc15;
+      border-radius: 10px;
       cursor: pointer;
-      z-index: 1000;
-      box-shadow: 0 0 10px rgba(250, 204, 21, 0.8);
-      transition: transform 0.2s, box-shadow 0.3s;
+      transition: transform 0.3s, box-shadow 0.3s;
+      width: 100%;
+      position: relative;
+      z-index: 10;
     }
 
-    .back-button:hover {
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #facc15;
+    }
+
+    .result {
+      margin-top: 1rem;
+      font-size: 1.3rem;
+      color: #fff8dc;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+      position: relative;
+      z-index: 10;
+    }
+
+    .countries {
+      margin-top: 1rem;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      position: relative;
+      z-index: 10;
+    }
+
+    .america { color: #ff4500; }
+    .europe { color: #28A745; }
+    .asia { color: #DC3545; }
+    .oceania { color: #FFC107; }
+    .africa { color: #6C757D; }
+
+    /* Botón mágico de volver */
+    .magic-back {
+      position: fixed;
+      bottom: 20px;
+      right: 20px; /* Lo movemos a la derecha para no tapar contenido */
+      background: linear-gradient(45deg, #b91c1c, #facc15);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      box-shadow: 0 0 15px rgba(250, 204, 21, 0.7);
+      transition: transform 0.3s, box-shadow 0.3s;
+      z-index: 999;
+    }
+
+    .magic-back:hover {
       transform: scale(1.1);
-      box-shadow: 0 0 15px rgba(250, 204, 21, 1);
+      box-shadow: 0 0 25px rgba(250, 204, 21, 1);
+      text-shadow: 0 0 8px #fff;
     }
 
-    /* Firma mágica Gryffindor */
+    /* Firma */
     .signature {
       text-align: center;
       margin-top: 50px;
       font-family: 'Cinzel', serif;
+      position: relative;
+      z-index: 10;
     }
 
     .signature .main {
       font-size: 0.9rem;
-      animation: glow-gryffindor 2s infinite alternate;
+      color: rgba(255, 255, 255, 0.7);
+      transition: color 0.3s;
+    }
+
+    .signature .main:hover {
+      color: #fff;
     }
 
     .signature .sub {
@@ -59,12 +150,7 @@
       margin-top: 4px;
     }
 
-    @keyframes glow-gryffindor {
-      0%, 100% { text-shadow: 0 0 5px #b91c1c, 0 0 10px #facc15; color: #facc15; }
-      50% { text-shadow: 0 0 15px #b91c1c, 0 0 25px #facc15; color: #b91c1c; }
-    }
-
-    /* Estrellas mágicas Gryffindor */
+    /* Estrellas mágicas */
     .stars {
       position: fixed;
       top: 0;
@@ -89,8 +175,8 @@
     }
 
     @keyframes moveStar {
-      from { transform: translateY(0); }
-      to { transform: translateY(100vh); }
+      from { transform: translateY(0) }
+      to { transform: translateY(100vh) }
     }
   </style>
   <script src="https://unpkg.com/libphonenumber-js@1.10.6/bundle/libphonenumber-js.min.js"></script>
@@ -98,10 +184,6 @@
 <body>
   <!-- Estrellas mágicas -->
   <div class="stars" id="stars"></div>
-
-  <a href="https://leencr.github.io/">
-    <button class="back-button">⬅️ Volver a la página de inicio</button>
-  </a>
 
   <h1>Conversor de Hora a Costa Rica (-6)</h1>
 
@@ -147,7 +229,8 @@
   <input type="date" id="date">
 
   <label>
-    <input type="checkbox" id="dst"> ¿Aplica horario de verano (DST)?
+    <input type="checkbox" id="dst">
+    ¿Aplica horario de verano (DST)?
   </label>
 
   <button onclick="convertTime()">Convertir a hora en Costa Rica</button>
@@ -166,28 +249,46 @@
     <div class="sub">© 2025 Book Dragon Club</div>
   </div>
 
-  <script>
-    // Crear estrellas mágicas rojas y doradas
-    const starsContainer = document.getElementById('stars');
-    const starColors = ['#b91c1c', '#facc15'];
-    for (let i = 0; i < 60; i++) {
-      const star = document.createElement('div');
-      const size = Math.random() * 3 + 2 + 'px';
-      star.classList.add('star');
-      star.style.width = size;
-      star.style.height = size;
-      star.style.left = Math.random() * 100 + 'vw';
-      star.style.top = Math.random() * 100 + 'vh';
-      star.style.background = starColors[Math.floor(Math.random() * starColors.length)];
-      star.style.animationDuration = 5 + Math.random() * 5 + 's';
-      starsContainer.appendChild(star);
-    }
+  <!-- Botón mágico para volver -->
+  <a href="https://leencr.github.io/" class="magic-back">⬅️ Volver a la página de inicio</a>
 
+  <script>
     function convertTime() {
       const tz = parseFloat(document.getElementById('timezone').value);
       const hour = parseInt(document.getElementById('hour').value || 0);
       const minute = parseInt(document.getElementById('minute').value || 0);
       const dst = document.getElementById('dst').checked ? 1 : 0;
+
+      const timezoneCountries = {
+        '-12': { countries: ['Baker Island'], continent: 'oceania' },
+        '-11': { countries: ['Pago Pago (Samoa Americana)', 'Niue'], continent: 'oceania' },
+        '-10': { countries: ['Hawái', 'Islas Cook'], continent: 'oceania' },
+        '-9': { countries: ['Alaska (EE.UU.)', 'Islas Gambier'], continent: 'oceania' },
+        '-8': { countries: ['EE.UU. (California, Washington, Oregon)', 'Canadá (Columbia Británica)'], continent: 'america' },
+        '-7': { countries: ['México (Sonora)', 'Canadá (Yukón)', 'EE.UU. (Arizona)'], continent: 'america' },
+        '-6': { countries: ['México (Chihuahua)', 'Costa Rica', 'Guatemala', 'Honduras', 'El Salvador'], continent: 'america' },
+        '-5': { countries: ['EE.UU. (Nueva York)', 'Canadá (Toronto)', 'México (Ciudad de México)'], continent: 'america' },
+        '-4': { countries: ['Venezuela', 'Bolivia', 'República Dominicana'], continent: 'america' },
+        '-3': { countries: ['Argentina', 'Brasil', 'Uruguay'], continent: 'america' },
+        '-2': { countries: ['Islas Georgias del Sur'], continent: 'america' },
+        '-1': { countries: ['Azores (Portugal)', 'Cabo Verde'], continent: 'africa' },
+        '0': { countries: ['Reino Unido', 'Portugal', 'Islandia'], continent: 'europe' },
+        '1': { countries: ['España', 'Francia', 'Italia'], continent: 'europe' },
+        '2': { countries: ['Bélgica', 'Países Bajos', 'Luxemburgo'], continent: 'europe' },
+        '3': { countries: ['Arabia Saudita', 'Irak', 'Kuwait'], continent: 'asia' },
+        '4': { countries: ['Emiratos Árabes Unidos', 'Oman'], continent: 'asia' },
+        '5': { countries: ['Pakistán', 'Uzbekistán'], continent: 'asia' },
+        '5.5': { countries: ['India', 'Sri Lanka'], continent: 'asia' },
+        '6': { countries: ['Bangladesh', 'Kazajistán'], continent: 'asia' },
+        '7': { countries: ['Tailandia', 'Vietnam'], continent: 'asia' },
+        '8': { countries: ['China', 'Malasia', 'Singapur'], continent: 'asia' },
+        '9': { countries: ['Japón', 'Corea del Sur'], continent: 'asia' },
+        '10': { countries: ['Australia (Este)', 'Papúa Nueva Guinea'], continent: 'oceania' },
+        '11': { countries: ['Islas Salomón'], continent: 'oceania' },
+        '12': { countries: ['Kiribati', 'Islas Marshall'], continent: 'oceania' },
+        '13': { countries: ['Islas Line Islands'], continent: 'oceania' },
+        '14': { countries: ['Islas de la Línea (Kiribati)'], continent: 'oceania' }
+      };
 
       const offset = (tz + dst) - (-6);
       let date = document.getElementById('date').value ? new Date(document.getElementById('date').value) : new Date();
@@ -196,35 +297,71 @@
       date.setSeconds(0);
       date.setHours(date.getHours() - offset);
 
-      const result = date.toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Costa_Rica' });
+      const result = date.toLocaleTimeString('es-CR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'America/Costa_Rica'
+      });
+
       document.getElementById('result').textContent = `En Costa Rica serían las ${result}.`;
 
-      document.getElementById('countries').innerHTML = '';
+      const countries = timezoneCountries[tz]?.countries || ['No se han definido países para esta zona horaria'];
+      const continent = timezoneCountries[tz]?.continent || 'america';
+      const countriesHtml = countries.map(country => `<span class="${continent}">${country}</span>`).join('<br/>');
+      document.getElementById('countries').innerHTML = countriesHtml;
     }
 
     function identifyCountry() {
       const phoneNumber = document.getElementById('phoneNumber').value;
       const countryToContinent = {
         'US': 'america', 'CA': 'america', 'MX': 'america', 'CR': 'america',
+        'PA': 'america', 'BR': 'america', 'AR': 'america', 'CO': 'america',
         'ES': 'europe', 'FR': 'europe', 'GB': 'europe', 'DE': 'europe',
-        'CN': 'asia', 'JP': 'asia', 'IN': 'asia'
+        'IT': 'europe', 'PT': 'europe', 'NL': 'europe',
+        'CN': 'asia', 'JP': 'asia', 'KR': 'asia', 'IN': 'asia',
+        'TH': 'asia', 'VN': 'asia', 'MY': 'asia',
+        'AU': 'oceania', 'NZ': 'oceania', 'FJ': 'oceania',
+        'ZA': 'africa', 'EG': 'africa', 'MA': 'africa', 'NG': 'africa'
       };
+
       const countryNames = {
         'US': 'Estados Unidos', 'CA': 'Canadá', 'MX': 'México', 'CR': 'Costa Rica',
+        'PA': 'Panamá', 'BR': 'Brasil', 'AR': 'Argentina', 'CO': 'Colombia',
         'ES': 'España', 'FR': 'Francia', 'GB': 'Reino Unido', 'DE': 'Alemania',
-        'CN': 'China', 'JP': 'Japón', 'IN': 'India'
+        'IT': 'Italia', 'PT': 'Portugal', 'NL': 'Países Bajos',
+        'CN': 'China', 'JP': 'Japón', 'KR': 'Corea del Sur', 'IN': 'India',
+        'TH': 'Tailandia', 'VN': 'Vietnam', 'MY': 'Malasia',
+        'AU': 'Australia', 'NZ': 'Nueva Zelanda', 'FJ': 'Fiyi',
+        'ZA': 'Sudáfrica', 'EG': 'Egipto', 'MA': 'Marruecos', 'NG': 'Nigeria'
       };
+
       try {
         const parsedNumber = libphonenumber.parsePhoneNumber(phoneNumber);
         const countryCode = parsedNumber.country;
         const continent = countryToContinent[countryCode] || 'default';
         const countryName = countryNames[countryCode] || countryCode;
+
         document.getElementById('phoneResult').innerHTML =
           `El número pertenece a: <span class="${continent}">${countryName}</span>`;
-      } catch {
+      } catch (error) {
         document.getElementById('phoneResult').innerHTML =
           '<span style="color: #DC3545;">Número no válido o país no identificado</span>';
       }
+    }
+
+    // Generar estrellas mágicas Gryffindor
+    const starsContainer = document.getElementById('stars');
+    for (let i = 0; i < 60; i++) {
+      const star = document.createElement('div');
+      const size = Math.random() * 3 + 2 + 'px';
+      star.classList.add('star');
+      star.style.width = size;
+      star.style.height = size;
+      star.style.left = Math.random() * 100 + 'vw';
+      star.style.top = Math.random() * 100 + 'vh';
+      star.style.background = Math.random() > 0.5 ? '#b91c1c' : '#facc15';
+      star.style.animationDuration = 5 + Math.random() * 5 + 's';
+      starsContainer.appendChild(star);
     }
   </script>
 </body>
