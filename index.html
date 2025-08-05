@@ -14,6 +14,8 @@
       color: #f8f8f8;
       min-height: 100vh;
       overflow-x: hidden;
+      position: relative;
+      padding-bottom: 120px; /* espacio para firma y botón */
     }
 
     h1 {
@@ -104,7 +106,7 @@
     .magic-back {
       position: fixed;
       bottom: 20px;
-      left: 20px;
+      right: 20px; /* Lo movemos a la derecha para no tapar contenido */
       background: linear-gradient(45deg, #b91c1c, #facc15);
       color: white;
       padding: 12px 20px;
@@ -114,13 +116,38 @@
       font-size: 1.1rem;
       box-shadow: 0 0 15px rgba(250, 204, 21, 0.7);
       transition: transform 0.3s, box-shadow 0.3s;
-      z-index: 10;
+      z-index: 999;
     }
 
     .magic-back:hover {
       transform: scale(1.1);
       box-shadow: 0 0 25px rgba(250, 204, 21, 1);
       text-shadow: 0 0 8px #fff;
+    }
+
+    /* Firma */
+    .signature {
+      text-align: center;
+      margin-top: 50px;
+      font-family: 'Cinzel', serif;
+      position: relative;
+      z-index: 10;
+    }
+
+    .signature .main {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+      transition: color 0.3s;
+    }
+
+    .signature .main:hover {
+      color: #fff;
+    }
+
+    .signature .sub {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.5);
+      margin-top: 4px;
     }
 
     /* Estrellas mágicas */
@@ -152,14 +179,6 @@
       to { transform: translateY(100vh) }
     }
   </style>
-  <!-- Firma -->
-  <div class="text-center mt-8">
-    <div class="text-sm text-white/70 hover:text-white transition-colors duration-300">
-      ✨ Creado con magia por ECB 📚
-    </div>
-    <div class="text-xs text-white/50 mt-1">
-      © 2025 Book Dragon Club
-    </div>
   <script src="https://unpkg.com/libphonenumber-js@1.10.6/bundle/libphonenumber-js.min.js"></script>
 </head>
 <body>
@@ -223,6 +242,15 @@
   <input type="tel" id="phoneNumber" placeholder="Ingrese número telefónico">
   <button onclick="identifyCountry()">Identificar País</button>
   <div id="phoneResult"></div>
+
+  <!-- Firma -->
+  <div class="signature">
+    <div class="main">✨ Creado con magia por ECB 📚</div>
+    <div class="sub">© 2025 Book Dragon Club</div>
+  </div>
+
+  <!-- Botón mágico para volver -->
+  <a href="https://leencr.github.io/" class="magic-back">⬅️ Volver a la página de inicio</a>
 
   <script>
     function convertTime() {
@@ -336,8 +364,5 @@
       starsContainer.appendChild(star);
     }
   </script>
-
-  <!-- Botón mágico para volver -->
-  <a href="https://leencr.github.io/" class="magic-back">⬅️ Volver a la página de inicio</a>
 </body>
 </html>
